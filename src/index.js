@@ -1,17 +1,52 @@
+import { render } from '@testing-library/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+class Parent extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 17,
+    }
+    this.handleClick = this.handleClick.bind(this);
+  }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+  parentHelper = () => {
+    this.handleClick(40);
+  }
+
+  handleClick(x) {
+    console.log("Called handleClick(" + x + ")");
+    this.setState({
+      value: x,
+    });
+  }
+
+  render() {
+    return(
+      <div>
+        <h1>{this.state.value}</h1>
+        <button onClick={this.parentHelper}>Parent Button</button>
+        <Child handleClick={this.handleClick}></Child>
+      </div>
+    );
+  }
+}
+
+class Child extends React.Component{
+
+  childHelper = () => {
+    this.props.handleClick(12);
+  }
+
+  render(){
+    return(
+      <div>
+        <button onClick={this.childHelper}>Child Button</button>
+      </div>
+    )
+  }
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<Parent />);
